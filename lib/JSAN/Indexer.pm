@@ -1,9 +1,9 @@
-package JSAN::Index;
+package JSAN::Indexer;
 use strict;
 use warnings;
 
 use Class::DBI::Loader;
-use JSAN::Index::Creator;
+use JSAN::Indexer::Creator;
 use base qw[Class::Accessor::Fast];
 __PACKAGE__->mk_accessors(qw[loader author distribution release library]);
 
@@ -23,7 +23,7 @@ sub new {
     my ($class) = shift;
     $LOADER = Class::DBI::Loader->new(
         dsn                     => $DSN,
-        namespace               => "JSAN::Index",
+        namespace               => "JSAN::Indexer",
         relationships           => 1,
     );
     my $self = $class->SUPER::new({@_});
@@ -35,7 +35,7 @@ sub new {
 
 sub create_index_db {
     my ($class) = shift;
-    JSAN::Index::Creator->create_index_db($class, $DSN, $INDEX_DB, @_);
+    JSAN::Indexer::Creator->create_index_db($class, $DSN, $INDEX_DB, @_);
 }
 
 sub _class_map {
@@ -76,7 +76,7 @@ __END__
 
 =head1 NAME
 
-JSAN::Index -- Data Manager for the JSAN SQLite Index
+JSAN::Indexer -- Data Manager for the JSAN SQLite Index
 
 =head1 AUTHOR
 

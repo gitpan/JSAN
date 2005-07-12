@@ -1,4 +1,4 @@
-package JSAN::Index::Creator;
+package JSAN::Indexer::Creator;
 use strict;
 use warnings;
 
@@ -11,8 +11,8 @@ our $MASTER_INDEX = q[http://openjsan.org/index.yaml];
 
 sub create_index_db {
     my ($class, $index, $dsn, $index_db, $location) = @_;
-    if ($JSAN::Index::LOADER) {
-        $_->db_Main->disconnect for $JSAN::Index::LOADER->classes;
+    if ($JSAN::Indexer::LOADER) {
+        $_->db_Main->disconnect for $JSAN::Indexer::LOADER->classes;
     }
     unlink $index_db;
     $class->connection($dsn);
@@ -85,7 +85,7 @@ sub _insert_data {
 
 =head1 NAME
 
-JSAN::Index::Creator -- Convert the YAML Index to SQLite
+JSAN::Indexer::Creator -- Convert the YAML Index to SQLite
 
 =head1 AUTHOR
 

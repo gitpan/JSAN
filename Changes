@@ -1,3 +1,7 @@
+2005-07-11    0.02
+
+  - Changed indexer namespace to JSAN::Indexer.
+
 2005-07-11    0.01
 
   - Initial release.

@@ -2,7 +2,7 @@ package JSAN::Shell;
 use strict;
 use warnings;
 
-use JSAN::Index;
+use JSAN::Indexer;
 use LWP::Simple qw[mirror is_success get];
 use base qw[Class::Accessor::Fast];
 use File::Temp qw[tempdir];
@@ -23,7 +23,7 @@ sub new {
 sub index {
     my ($self) = @_;
     return $self->_index if $self->_index;
-    $self->_index(JSAN::Index->new);
+    $self->_index(JSAN::Indexer->new);
     return $self->_index;
 }
 
@@ -60,12 +60,12 @@ sub install {
 sub index_create {
     my ($self) = @_;
     my $mirror = join '/', $self->my_mirror, 'index.yaml';
-    JSAN::Index->create_index_db($mirror);
+    JSAN::Indexer->create_index_db($mirror);
 }
 sub index_get {
     my ($self) = @_;
-    my $rc = mirror($self->my_mirror . "/index.sqlite", $JSAN::Index::INDEX_DB);
-    die "Could not mirror index" unless -e $JSAN::Index::INDEX_DB;
+    my $rc = mirror($self->my_mirror . "/index.sqlite", $JSAN::Indexer::INDEX_DB);
+    die "Could not mirror index" unless -e $JSAN::Indexer::INDEX_DB;
     print "Downloaded index.\n";
 }
 
