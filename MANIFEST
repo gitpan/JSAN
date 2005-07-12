@@ -1,0 +1,12 @@
+bin/jsan
+Changes
+INSTALL
+lib/JSAN.pm
+lib/JSAN/Index.pm
+lib/JSAN/Index/Creator.pm
+lib/JSAN/Shell.pm
+Makefile.PL
+MANIFEST			This list of files
+README
+t/use.t
+META.yml                                 Module meta-data (added by MakeMaker)
