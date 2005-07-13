@@ -5,7 +5,7 @@ use Term::ReadLine;
 use Getopt::Long;
 
 our $PROMPT  = 'jsan> ';
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 our %COMMAND;
 our $OPTIONS = {
