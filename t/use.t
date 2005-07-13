@@ -3,4 +3,4 @@ use strict;
 use warnings;
 use Data::Dumper;diag Dumper \@INC;
 
-use_ok($_) for qw[JSAN JSAN::Index JSAN::Shell JSAN::Index::Creator];
+use_ok($_) for qw[JSAN JSAN::Indexer JSAN::Shell JSAN::Indexer::Creator];

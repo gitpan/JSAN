@@ -8,6 +8,7 @@ use base qw[Class::Accessor::Fast];
 use File::Temp qw[tempdir];
 use Cwd;
 use File::Path;
+use File::Spec::Functions qw[rel2abs];
 
 our $SHELL;
 
@@ -30,11 +31,21 @@ sub index {
 sub install {
     my ($self, $lib, $prefix) = @_;
     die "You must supply a prefix to install to" unless $prefix;
+    $prefix = rel2abs($prefix);
     mkpath($prefix);
     my $library = $self->index->library->retrieve($lib);
     die "No such library $lib" unless $library;
-    
+
+    die "$lib is up to date: " . $library->version . "\n"
+      if $self->_check_uptodate($library, $prefix);
+
     my $release = $library->release;
+
+    my $deps = $release->meta->requires;
+    foreach my $dep ( @{$deps} ) {
+        eval { $self->install($dep->{name}, $prefix) };
+    }
+
     my $link = join '', $self->my_mirror, $release->source;
     my $dir  = tempdir(CLEANUP => 0);
     my $file = (split /\//, $link)[-1];
@@ -67,6 +78,24 @@ sub index_get {
     my $rc = mirror($self->my_mirror . "/index.sqlite", $JSAN::Indexer::INDEX_DB);
     die "Could not mirror index" unless -e $JSAN::Indexer::INDEX_DB;
     print "Downloaded index.\n";
+}
+
+sub _check_uptodate {
+   my ($self, $library, $prefix) = @_;
+   my $lib = $library->name;
+   $lib =~ s[\.][/]g;
+   $lib = "$prefix/$lib.js";
+
+   if ( -e $lib ) {
+       open LIB, $lib or die "Up to date check failed for " . $library->name;
+       while (<LIB>) {
+           my ($version) = $_ =~ /VERSION\s*(?:=|:)\s*[^\d._]*([\d._]+)/;
+           next unless $version;
+           return 1 if $version eq $library->version;
+       }
+       close LIB;
+   }
+   return;
 }
 
 1;

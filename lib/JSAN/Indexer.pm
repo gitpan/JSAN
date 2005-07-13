@@ -4,6 +4,7 @@ use warnings;
 
 use Class::DBI::Loader;
 use JSAN::Indexer::Creator;
+use YAML;
 use base qw[Class::Accessor::Fast];
 __PACKAGE__->mk_accessors(qw[loader author distribution release library]);
 
@@ -68,6 +69,44 @@ sub _relate {
             warn $@ if $@;
         }
     }
+    
+    $self->release->has_a(meta => 'JSAN::Indexer::Meta');
+}
+
+package JSAN::Indexer::Meta;
+use strict;
+use warnings;
+
+use YAML;
+use base qw[Class::Accessor::Fast];
+
+__PACKAGE__->mk_accessors(qw[yaml _meta]);
+sub new {
+    my ($class, $meta) = @_;
+    return $class->SUPER::new({yaml => $meta, _meta => Load($meta)});
+}
+
+sub requires {
+    my ($self) = @_;
+    my $req   = $self->_meta->{requires};
+    my $build = $self->_meta->{build_requires};
+
+    my %reqs;
+    if (ref($build) eq 'HASH') {
+        $reqs{$_} = $build->{$_} for keys %{$build};
+    }
+    if (ref($req) eq 'HASH') {
+        $reqs{$_} = $req->{$_} for keys %{$req};
+    }
+
+    my @reqs;
+    while (my ($k, $v) = each %reqs) {
+        push @reqs, {
+            name    => $k,
+            version => $v,
+        };
+    }
+    return \@reqs;
 }
 
 1;

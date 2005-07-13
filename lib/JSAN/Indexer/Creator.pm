@@ -74,6 +74,7 @@ sub _insert_data {
         $loader->find_class('library')->create({
             name         => $name,
             version      => $library->{version},
+            doc          => $library->{doc},
             distribution => $library->{distribution_name},
             release      => $loader->find_class('release')->search(
                 distribution => $library->{distribution_name},
@@ -137,5 +138,6 @@ CREATE TABLE library (
     name         varchar(100) not null primary key,
     distribution varchar(100) not null references distribution,
     release      int not null references release,
-    version      varchar(100)
+    version      varchar(100),
+    doc          varchar(100) not null
 );

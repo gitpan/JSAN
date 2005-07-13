@@ -1,3 +1,10 @@
+2005-07-12    0.03
+
+  - Fixed tests.
+  - Added doc entry to library table.
+  - Added meta class handler.
+  - Added dependency following.
+
 2005-07-11    0.02
 
   - Changed indexer namespace to JSAN::Indexer.
