@@ -2,12 +2,13 @@ package JSAN::Indexer::Creator;
 use strict;
 use warnings;
 
-use base qw[Class::DBI];
+use base 'Class::DBI';
 use Class::DBI::DATA::Schema translate => [ 'MySQL', 'SQLite' ];
 use LWP::Simple;
 use YAML;
 
-our $MASTER_INDEX = q[http://openjsan.org/index.yaml];
+our $VERSION      = '0.05';
+our $MASTER_INDEX = 'http://openjsan.org/index.yaml';
 
 sub create_index_db {
     my ($class, $index, $dsn, $index_db, $location) = @_;

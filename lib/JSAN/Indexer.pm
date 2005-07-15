@@ -8,6 +8,7 @@ use YAML;
 use base qw[Class::Accessor::Fast];
 __PACKAGE__->mk_accessors(qw[loader author distribution release library]);
 
+our $VERSION = '0.05';
 our $LOADER;
 our $DSN;
 our $INDEX_DB;
@@ -88,6 +89,7 @@ sub new {
 
 sub requires {
     my ($self) = @_;
+    return [] unless $self->_meta;
     my $req   = $self->_meta->{requires};
     my $build = $self->_meta->{build_requires};
 

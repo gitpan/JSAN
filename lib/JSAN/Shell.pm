@@ -1,18 +1,23 @@
 package JSAN::Shell;
+
+# Provides the main functionality for the JSAN CLI installer
+
 use strict;
 use warnings;
 
-use JSAN::Indexer;
-use LWP::Simple qw[mirror is_success get];
-use base qw[Class::Accessor::Fast];
-use File::Temp qw[tempdir];
+use base 'Class::Accessor::Fast';
+use File::Spec ();
+use File::Path ();
+use File::Temp ();
 use Cwd;
-use File::Path;
-use File::Spec::Functions qw[rel2abs];
+use JSAN::Indexer;
+use LWP::Simple;
 
+our $VERSION = '0.05';
 our $SHELL;
 
 __PACKAGE__->mk_accessors(qw[_index my_mirror]);
+
 sub new {
     return $SHELL if $SHELL;
     my ($class) = shift;
@@ -31,8 +36,8 @@ sub index {
 sub install {
     my ($self, $lib, $prefix) = @_;
     die "You must supply a prefix to install to" unless $prefix;
-    $prefix = rel2abs($prefix);
-    mkpath($prefix);
+    $prefix = File::Spec->rel2abs($prefix);
+    File::Path::mkpath($prefix);
     my $library = $self->index->library->retrieve($lib);
     die "No such library $lib" unless $library;
 
@@ -47,10 +52,10 @@ sub install {
     }
 
     my $link = join '', $self->my_mirror, $release->source;
-    my $dir  = tempdir(CLEANUP => 0);
+    my $dir  = File::Temp::tempdir(CLEANUP => 0);
     my $file = (split /\//, $link)[-1];
     print $release->source . " -> $dir/$file\n";
-    my $tarball = get($link);
+    my $tarball = LWP::Simple::get($link);
     die "Downloading dist [$link] failed." unless $tarball;
     
     my $pwd = getcwd();
@@ -73,9 +78,10 @@ sub index_create {
     my $mirror = join '/', $self->my_mirror, 'index.yaml';
     JSAN::Indexer->create_index_db($mirror);
 }
+
 sub index_get {
     my ($self) = @_;
-    my $rc = mirror($self->my_mirror . "/index.sqlite", $JSAN::Indexer::INDEX_DB);
+    my $rc = LWP::Simple::mirror($self->my_mirror . "/index.sqlite", $JSAN::Indexer::INDEX_DB);
     die "Could not mirror index" unless -e $JSAN::Indexer::INDEX_DB;
     print "Downloaded index.\n";
 }
