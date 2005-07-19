@@ -5,7 +5,7 @@ use Term::ReadLine;
 use Getopt::Long;
 
 our $PROMPT  = 'jsan> ';
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 our %COMMAND;
 our $OPTIONS = {
@@ -114,6 +114,8 @@ JSAN -- JavaScript Archive Network (JSAN) Shell
 =head1 AUTHOR
 
 Casey West <F<casey@geeknest.com>>.
+
+Adam Kennedy <F<adam@ali.as>>, L<http://ali.as>
 
 =head1 COPYRIGHT
 

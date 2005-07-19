@@ -66,6 +66,7 @@ sub _insert_data {
                 latest       => $rel->{latest},
                 source       => $rel->{source},
                 version      => $rel->{version},
+                srcdir       => $rel->{srcdir},
             });
         }
     }
@@ -131,6 +132,7 @@ CREATE TABLE release (
     meta         text,
     latest       int not null,
     source       varchar(100) not null,
+    srcdir       varchar(100) not null,
     version      varchar(100)
 );
 

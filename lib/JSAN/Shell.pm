@@ -67,7 +67,7 @@ sub install {
     `tar xzvf $file`;
 
     print "Installing libraries to $prefix\n";
-    chdir join '-', $release->distribution->name, $release->version;
+    chdir $release->srcdir;
     `cp -r lib/* $prefix`;
 
     chdir $pwd;
@@ -115,6 +115,8 @@ JSAN::Shell -- JavaScript Archive Network (JSAN) Shell Backend
 =head1 AUTHOR
 
 Casey West <F<casey@geeknest.com>>.
+
+Adam Kennedy <F<adam@ali.as>>, L<http://ali.as>
 
 =head1 COPYRIGHT
 
